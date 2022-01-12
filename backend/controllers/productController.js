@@ -36,15 +36,17 @@ exports.createProduct = catchAsyncError(async (req, res, next) => {
 exports.getAllProducts = catchAsyncError(async (req, res, next) => {
 
     const productCount = await productModel.countDocuments()
-    const apifeature = new ApiFeatures(productModel, req.query);    // Call the constructor
-    apifeature.search();  // Change the query (productModel.find()) to (productModel.find({ name: { '$regex': 'pencil', '$options': 'i' }})
-    apifeature.filter();  // Change the query (productModel.find()) to (productModel.find({ name: { '$regex': 'pencil', '$options': 'i' }})
-    apifeature.pagination();  // Change the query (productModel.find()) to (productModel.find({ name: { '$regex': 'pencil', '$options': 'i' }})
+    const apifeature = new ApiFeatures(productModel, req.query)   // Call the constructor
+    .search()   // Change the query (productModel.find()) to (productModel.find({ name: { '$regex': 'pencil', '$options': 'i' }})
+    .filter()   // Change the query (productModel.find()) to (productModel.find({ name: { '$regex': 'pencil', '$options': 'i' }})
+    // let filteredProductCount = prods.length
+    .pagination();  // Change the query (productModel.find()) to (productModel.find({ name: { '$regex': 'pencil', '$options': 'i' }})
     const products = await apifeature.query;   // Execute the changed query
     res.status(200).json({
         success: true,
         "productsCount": productCount,
-        "products": products
+        "products": products,
+        // filteredProductCount
     })
 });
 

@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "cd backend && node ./index.js",
+    "dev": "code . && concurrently \"cd backend && nodemon ./index.js\" \"cd frontend && npm start\"",
     "both": "concurrently \"cd backend && nodemon ./index.js\" \"cd frontend && npm start\""
   },
   "author": "gramo",
