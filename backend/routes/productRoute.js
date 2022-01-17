@@ -4,7 +4,7 @@ const router = express.Router();
 const { isAuthenticatedUser, authorizeRoles} = require('../middleware/auth')    // Middleware to check if user is logged In or not and authorize roles
 const { getCategory } = require('../controllers/categoryController')
 
-router.get('/products', getAllProducts)
+router.get('/products', isAuthenticatedUser, getAllProducts)
 router.get('/categories', getCategory)
 router.post('/createProduct', isAuthenticatedUser, authorizeRoles("admin"), createProduct)
 router.put('/updateProduct/:id', isAuthenticatedUser, authorizeRoles("admin"), updateProduct)

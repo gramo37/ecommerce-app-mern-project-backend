@@ -5,11 +5,31 @@ const { sendToken } = require('../utils/jwtToken');
 const sendEmail = require('../utils/sendEmail');
 const crypto = require('crypto');
 const ApiFeatures = require('../utils/apiFeatures')
+const cloudinary = require("cloudinary")
 
 // Signup
 exports.createUser = catchAsyncError(
     async (req, res, next) => {
-        const user = await userModel.create(req.body)
+
+        const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+            folder: "avatars",
+            width: 150,
+            crop: "scale"
+        })
+
+        console.log(myCloud.secure_url, myCloud.public_id)
+
+        const { name, email, password } = req.body;
+
+        const user = await userModel.create({
+            name,
+            email,
+            password,
+            avatar: {
+                public_id: myCloud.public_id,
+                url: myCloud.secure_url
+            }
+        })
         sendToken(user, res, 200)  // Get and save token in cookie
     }
 )
@@ -217,7 +237,7 @@ exports.updateProfile = catchAsyncError(
 // Delete User
 exports.deleteUser = catchAsyncError(async (req, res, next) => {
     let user = await userModel.findById(req.params.id)
-    if(user === null){
+    if (user === null) {
         return next(new ErrorHandler(`User does not exists with id: ${req.params.id}`, 401))
     }
 
@@ -262,8 +282,8 @@ exports.updateRole = catchAsyncError(
 exports.getSingleUser = catchAsyncError(async (req, res, next) => {
     const user = await userModel.findById(req.params.id);
 
-    if(!user){
-        return(next(new ErrorHandler(`User Not Found with id: ${req.params.id}`, 401)))
+    if (!user) {
+        return (next(new ErrorHandler(`User Not Found with id: ${req.params.id}`, 401)))
     }
 
     res.status(200).json({

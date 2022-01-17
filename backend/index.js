@@ -1,6 +1,10 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const path = require('path');
+var cors = require('cors');
+const bodyParser = require("body-parser")
+const fileUpload = require("express-fileupload")
+const cloudinary = require("cloudinary")
 
 // Handling uncaught error
 process.on("uncaughtException", (err)=>{
@@ -15,10 +19,19 @@ dotenv.config({path: path.join(currentPath, 'config/config.env')})
 const errorMiddleware = require('./middleware/errors')
 
 const app = express();
+app.use(cors());
 var cookieParser = require('cookie-parser');
 app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(fileUpload())
 app.use(express.json())   // Use json in our application
 const connectToDatabase = require('./db');
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+})
 
 // Database connection
 connectToDatabase();

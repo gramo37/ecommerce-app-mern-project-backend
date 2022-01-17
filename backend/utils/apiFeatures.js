@@ -33,6 +33,7 @@ class ApiFeatures {
     // This function removes queries like "keyword", "limit" and "page" from queryStr and finds using the rest of the queryStr
     filter() {                                         
         const queryCopy = {...this.queryStr}
+        console.log(queryCopy)
         // Removing some fields for category
         const removeFields = ["keyword", "limit", "page"]    
         removeFields.forEach(key=>delete queryCopy[key])   // Key will take these values ("keyword", "limit", "page") one by one and coressponding objects will be deleted
@@ -40,6 +41,7 @@ class ApiFeatures {
         let queryStr = JSON.stringify(queryCopy)
         queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (key) => `$${key}`)   // Replace all gt, lt, lte, gte from above variable (queryStr), so that we can use it in find() method of mongodb
         // this.query = this.query.find(queryStr)
+        console.log(queryStr)
         this.query = this.query.find(JSON.parse(queryStr))
         return this;
     }

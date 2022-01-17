@@ -24,6 +24,10 @@ module.exports = (err, req, res, next)=>{
         err.message = `Json web token is Expired, Try Again`
     }
 
+    if(err.name === "PayloadTooLargeError") {
+        err.message = `Please Upload a avatar less than 100 kb`
+    }
+
     res.status(err.statusCode).json({
         success: false,
         "message": err.message,

@@ -36,6 +36,7 @@ exports.createProduct = catchAsyncError(async (req, res, next) => {
 exports.getAllProducts = catchAsyncError(async (req, res, next) => {
 
     const productCount = await productModel.countDocuments()
+    console.log("query", req.query)
     const apifeature = new ApiFeatures(productModel, req.query)   // Call the constructor
     .search()   // Change the query (productModel.find()) to (productModel.find({ name: { '$regex': 'pencil', '$options': 'i' }})
     .filter()   // Change the query (productModel.find()) to (productModel.find({ name: { '$regex': 'pencil', '$options': 'i' }})
@@ -228,6 +229,8 @@ exports.searchByCollection = catchAsyncError(async (req, res, next) => {
 
     const apifeature = new ApiFeatures(productModel, req.query);   
     apifeature.searchCollection();  
+    apifeature.filter();  
+    apifeature.pagination();  
     const products = await apifeature.query;   
     
     res.status(200).json({
