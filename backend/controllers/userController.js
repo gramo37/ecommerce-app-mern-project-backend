@@ -17,8 +17,6 @@ exports.createUser = catchAsyncError(
             crop: "scale"
         })
 
-        console.log(myCloud.secure_url, myCloud.public_id)
-
         const { name, email, password } = req.body;
 
         const user = await userModel.create({
@@ -28,7 +26,9 @@ exports.createUser = catchAsyncError(
             avatar: {
                 public_id: myCloud.public_id,
                 url: myCloud.secure_url
-            }
+            },
+            createdAt: Date.now(),
+            lastUpdated: Date.now()
         })
         sendToken(user, res, 200)  // Get and save token in cookie
     }
@@ -206,6 +206,8 @@ exports.updatePassword = catchAsyncError(
         // Change Password
         user.password = req.body.newPassword;    // Change the password
 
+        user.lastUpdated = Date.now()
+
         await user.save()
 
         sendToken(user, res, 200)
@@ -216,9 +218,30 @@ exports.updatePassword = catchAsyncError(
 exports.updateProfile = catchAsyncError(
     async (req, res, next) => {
 
-        const newUserData = {
-            name: req.body.name,
-            email: req.body.email
+        let newUserData = {}
+
+        if (req.body.avatar === "") {
+            newUserData = {
+                name: req.body.name,
+                email: req.body.email
+            }
+        } else {
+            
+            const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+                folder: "avatars",
+                width: 150,
+                crop: "scale"
+            })
+
+            newUserData = {
+                name: req.body.name,
+                email: req.body.email,
+                avatar: {
+                    public_id: myCloud.public_id,
+                    url: myCloud.secure_url
+                },
+                lastUpdated: Date.now()
+            }
         }
 
         const user = await userModel.findByIdAndUpdate(req.user.id, newUserData, {
