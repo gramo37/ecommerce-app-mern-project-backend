@@ -226,6 +226,12 @@ exports.updateProfile = catchAsyncError(
                 email: req.body.email
             }
         } else {
+
+            const tempUser = await userModel.findById(req.user.id);
+
+            const imageId = tempUser.avatar.public_id;
+
+            await cloudinary.v2.uploader.destroy(imageId)
             
             const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
                 folder: "avatars",
