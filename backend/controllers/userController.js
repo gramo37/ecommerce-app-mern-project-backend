@@ -117,7 +117,8 @@ exports.forgotPassword = catchAsyncError(
 
         // We need to save the user as some new variables are added to the user in getResetPasswordToken() [namely: resetPasswordToken, resetPasswordExpire]
         await user.save({ validateBeforeSave: false });
-        const resetPasswordURL = `${req.protocol}://${req.get("host")}/api/v2/password/reset/${resetToken}`;
+        const resetPasswordURL = `${req.protocol}://localhost:3000/api/v2/password/reset/${resetToken}`;
+        // const resetPasswordURL = `${req.protocol}://${req.get("host")}/api/v2/password/reset/${resetToken}`;
 
         const message = `Reset Password using: \n\n${resetPasswordURL}. \n\n Ignore if not requested.`;
 
@@ -130,7 +131,8 @@ exports.forgotPassword = catchAsyncError(
 
             res.status(200).json({
                 success: true,
-                message: `Email sent to ${user.email} successfully`
+                message: `Email sent successfully`
+                // message: `Email sent to ${user.email} successfully`
             })
         } catch (error) {
             user.resetPasswordToken = undefined;
@@ -232,7 +234,7 @@ exports.updateProfile = catchAsyncError(
             const imageId = tempUser.avatar.public_id;
 
             await cloudinary.v2.uploader.destroy(imageId)
-            
+
             const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
                 folder: "avatars",
                 width: 150,
