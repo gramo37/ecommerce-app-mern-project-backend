@@ -117,7 +117,7 @@ exports.forgotPassword = catchAsyncError(
 
         // We need to save the user as some new variables are added to the user in getResetPasswordToken() [namely: resetPasswordToken, resetPasswordExpire]
         await user.save({ validateBeforeSave: false });
-        const resetPasswordURL = `${req.protocol}://localhost:3000/api/v2/password/reset/${resetToken}`;
+        const resetPasswordURL = `${process.env.FRONTEND_URL}/api/v2/password/reset/${resetToken}`;
         // const resetPasswordURL = `${req.protocol}://${req.get("host")}/api/v2/password/reset/${resetToken}`;
 
         const message = `Reset Password using: \n\n${resetPasswordURL}. \n\n Ignore if not requested.`;
