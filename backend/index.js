@@ -40,6 +40,7 @@ connectToDatabase();
 app.use('/api/v1/', require('./routes/productRoute'))
 app.use('/api/v2/', require('./routes/userRoute'))
 app.use('/api/v3/', require('./routes/orderRoute'))
+app.use('/api/v4/', require('./routes/paymentRoute'))
 
 // Middleware for error
 app.use(errorMiddleware)

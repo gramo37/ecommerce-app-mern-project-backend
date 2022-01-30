@@ -36,6 +36,7 @@
     "react-infinite-scroll-component": "^6.1.0",
     "react-material-ui-carousel": "^3.1.1",
     "react-responsive-carousel": "^3.2.22",
+    "stripe": "^8.201.0",
     "validator": "^13.7.0"
   }
 }
